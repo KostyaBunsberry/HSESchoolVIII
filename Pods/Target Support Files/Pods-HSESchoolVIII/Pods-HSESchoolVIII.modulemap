@@ -1,0 +1,6 @@
+framework module Pods_HSESchoolVIII {
+  umbrella header "Pods-HSESchoolVIII-umbrella.h"
+
+  export *
+  module * { export * }
+}

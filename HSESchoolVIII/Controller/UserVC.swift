@@ -13,6 +13,7 @@ class UserVC: UIViewController {
     var data: User!
     
     var repos = [Repo]()
+    var repoObject = Repo()
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -58,13 +59,18 @@ extension UserVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "repoCell", for: indexPath) as! RepoCell
         cell.titleLabel.text = repos[indexPath.row].title
-        // MARK: nothing done here
         cell.dateLabel.text = "Created at \(repos[indexPath.row].created)"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //MARK: segue to repoVC
+        repoObject = repos[indexPath.row]
+        performSegue(withIdentifier: "toUserRepo", sender: nil)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destination = segue.destination as! RepositoryVC
+        destination.data = repoObject
     }
 }

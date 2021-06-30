@@ -31,6 +31,7 @@ class SearchVC: UIViewController {
     @IBOutlet weak var searchTextField: UITextField!
 
     private var filterMode = 0
+    private var loading = false
     
     var users = [User]()
     var repos = [Repo]()
@@ -103,7 +104,6 @@ class SearchVC: UIViewController {
                 tableData.append(TableObject(title: repo.title, id: 0, time: repo.created, type: .repo, desc: repo.desc, language: repo.language))
             }
         }
-        
         tableView.reloadData()
     }
     
@@ -117,9 +117,11 @@ extension SearchVC: UITextFieldDelegate {
     func timerShit() {
         timer.invalidate()
         if !searchTextField.text!.isEmpty {
+            loading = true
             timer = Timer.scheduledTimer(withTimeInterval: 1.2, repeats: false) { timer in
                 self.reloadTableData(key: self.searchTextField.text ?? "", unloaded: true)
                 _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { timer in
+                    self.loading = false
                     self.reloadTableData(key: "", unloaded: false)
                 }
             }
@@ -160,6 +162,9 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableData.isEmpty {
+            if searchTextField.text?.count ?? 0 > 2 && !loading{
+                return tableView.dequeueReusableCell(withIdentifier: "notFoundCell", for: indexPath)
+            }
             return tableView.dequeueReusableCell(withIdentifier: "typeCell", for: indexPath)
         }
         
@@ -182,20 +187,26 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // MARK: check type and go to shit
         if tableData[indexPath.row].type == .user {
             let object = tableData[indexPath.row]
             userObject = User(title: object.title, id: object.id, repos_url: object.repos_url, avatar: object.avatar, followers: object.followers)
             self.performSegue(withIdentifier: "toUserView", sender: nil)
+        } else {
+            let object = tableData[indexPath.row]
+            repoObject = Repo(title: object.title, desc: object.desc, created: object.time, language: object.language)
+            self.performSegue(withIdentifier: "toRepositoryView", sender: nil)
         }
         self.view.endEditing(true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier  == "toUserView" {
-                let destination = segue.destination as! UserVC
-                destination.data = userObject
-            }
+        if segue.identifier  == "toUserView" {
+            let destination = segue.destination as! UserVC
+            destination.data = userObject
+        } else {
+            let destination = segue.destination as! RepositoryVC
+            destination.data = repoObject
         }
+    }
 }

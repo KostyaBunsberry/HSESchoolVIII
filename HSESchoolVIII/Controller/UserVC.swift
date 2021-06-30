@@ -7,27 +7,39 @@
 
 import UIKit
 import Kingfisher
+import RealmSwift
 
 class UserVC: UIViewController {
     
     var data: User!
+    var delegate: MarkedDelegate?
     
-    var repos = [Repo]()
-    var repoObject = Repo()
+    private var repos = [Repo]()
+    private var repoObject = Repo()
+    
+    let realm = try! Realm()
+    private var saved = false
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var bookmarkButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
+    
+    private var savedObject = RealmUser()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        for object in realm.objects(RealmUser.self) {
+            if object.title == data.title {
+                savedObject = object
+                saved = true
+            }
+        }
 
         avatarImageView.backgroundColor = .tertiarySystemBackground
         avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
         avatarImageView.kf.setImage(with: URL(string: data.avatar))
-        bookmarkButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        bookmarkButton.imageView?.contentMode = .scaleAspectFit
         nameLabel.text = data.title
         
         self.navigationItem.title = ""
@@ -35,7 +47,18 @@ class UserVC: UIViewController {
         logo.contentMode = .scaleAspectFit
         self.navigationItem.titleView = logo
         
+        if saved {
+            saveButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+        } else {
+            saveButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        }
+        
         getRepos()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.marksChanged()
     }
     
     func getRepos() {
@@ -45,8 +68,27 @@ class UserVC: UIViewController {
         })
     }
     
-    @IBAction func saveToBookmarks() {
-        
+    @IBAction func saveUser() {
+        if saved {
+            for object in realm.objects(RealmUser.self) {
+                if object.title == savedObject.title {
+                    do {
+                        try realm.write {
+                            realm.delete(object)
+                        }
+                    } catch {
+                        print("Error while deleting")
+                    }
+                }
+            }
+            saved = false
+            saveButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        } else {
+            savedObject = RealmUser(title: data.title, id: data.id, repos_url: data.repos_url, avatar: data.avatar, followers: data.followers)
+            RealmService().create(savedObject)
+            saved = true
+            saveButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+        }
     }
 
 }

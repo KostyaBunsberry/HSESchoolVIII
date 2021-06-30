@@ -26,6 +26,7 @@
 		17E9DA94268CCB6E0094016F /* NoMarksCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E9DA93268CCB6E0094016F /* NoMarksCell.swift */; };
 		17E9DA96268CDA6C0094016F /* LoadingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E9DA95268CDA6C0094016F /* LoadingCell.swift */; };
 		17E9DA98268CF6290094016F /* BordersExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E9DA97268CF6290094016F /* BordersExtension.swift */; };
+		17E9DA9A268CFBD50094016F /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E9DA99268CFBD50094016F /* RealmService.swift */; };
 		F54F814D559937A20418FFEF /* Pods_HSESchoolVIII.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8381E9ED6B92C1FE3F7D8849 /* Pods_HSESchoolVIII.framework */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		17E9DA93268CCB6E0094016F /* NoMarksCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoMarksCell.swift; sourceTree = "<group>"; };
 		17E9DA95268CDA6C0094016F /* LoadingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCell.swift; sourceTree = "<group>"; };
 		17E9DA97268CF6290094016F /* BordersExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BordersExtension.swift; sourceTree = "<group>"; };
+		17E9DA99268CFBD50094016F /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
 		63D6F3A1F06333719DA4CC5B /* Pods-HSESchoolVIII.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HSESchoolVIII.release.xcconfig"; path = "Target Support Files/Pods-HSESchoolVIII/Pods-HSESchoolVIII.release.xcconfig"; sourceTree = "<group>"; };
 		8381E9ED6B92C1FE3F7D8849 /* Pods_HSESchoolVIII.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HSESchoolVIII.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F35621B698A93CB9BBCF5B19 /* Pods-HSESchoolVIII.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HSESchoolVIII.debug.xcconfig"; path = "Target Support Files/Pods-HSESchoolVIII/Pods-HSESchoolVIII.debug.xcconfig"; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				17BE9ACC268601F700DBDA37 /* Repo.swift */,
 				17E9DA91268CA8C80094016F /* AdditionalAPI.swift */,
 				17E9DA97268CF6290094016F /* BordersExtension.swift */,
+				17E9DA99268CFBD50094016F /* RealmService.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				17E9DA98268CF6290094016F /* BordersExtension.swift in Sources */,
+				17E9DA9A268CFBD50094016F /* RealmService.swift in Sources */,
 				17BE9ACD268601F700DBDA37 /* Repo.swift in Sources */,
 				175B431C26842EA6002D80B5 /* RepositoryVC.swift in Sources */,
 				175B431E26842FA5002D80B5 /* SearchAPI.swift in Sources */,

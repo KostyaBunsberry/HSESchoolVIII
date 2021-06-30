@@ -6,17 +6,23 @@
 //
 
 import UIKit
+import RealmSwift
 
-class MarkedVC: UIViewController {
+protocol MarkedDelegate {
+    func marksChanged()
+}
+
+class MarkedVC: UIViewController, MarkedDelegate {
     
+    let realm = try! Realm()
     
-    var users = [User]()
-    var repos = [Repo]()
     var tableData = [TableObject]()
     
     var userObject = User()
     var repoObject = Repo()
 
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,6 +30,25 @@ class MarkedVC: UIViewController {
         let logo = UIImageView(image: UIImage(named: "GithubLogo"))
         logo.contentMode = .scaleAspectFit
         self.navigationItem.titleView = logo
+        
+        reloadData()
+    }
+    
+    func marksChanged() {
+        reloadData()
+    }
+    
+    func reloadData() {
+        tableData.removeAll()
+        
+        for user in realm.objects(RealmUser.self) {
+            tableData.append(TableObject(title: user.title, id: user.id, type: .user, repos_url: user.repos_url, avatar: user.avatar, followers: user.followers))
+        }
+        
+        for repo in realm.objects(RealmRepo.self) {
+            tableData.append(TableObject(title: repo.title, time: repo.created, type: .repo, language: repo.language))
+        }
+        tableView.reloadData()
     }
 
 }
@@ -50,9 +75,33 @@ extension MarkedVC: UITableViewDelegate, UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "repoCell", for: indexPath) as! RepoCell
             cell.titleLabel.text = tableData[indexPath.row].title
-            // MARK: nothing done here
             cell.dateLabel.text = "Created at \(tableData[indexPath.row].time)"
             return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableData[indexPath.row].type == .user {
+            let object = tableData[indexPath.row]
+            userObject = User(title: object.title, id: object.id, repos_url: object.repos_url, avatar: object.avatar, followers: object.followers)
+            self.performSegue(withIdentifier: "toSavedUser", sender: nil)
+        } else {
+            let object = tableData[indexPath.row]
+            repoObject = Repo(title: object.title, desc: object.desc, created: object.time, language: object.language)
+            self.performSegue(withIdentifier: "toSavedRepo", sender: nil)
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier  == "toSavedUser" {
+            let destination = segue.destination as! UserVC
+            destination.data = userObject
+            destination.delegate = self
+        } else if segue.identifier  == "toSavedRepo" {
+            let destination = segue.destination as! RepositoryVC
+            destination.data = repoObject
+            destination.delegate = self
         }
     }
     

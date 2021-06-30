@@ -204,7 +204,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
         if segue.identifier  == "toUserView" {
             let destination = segue.destination as! UserVC
             destination.data = userObject
-        } else {
+        } else if segue.identifier  == "toRepositoryView" {
             let destination = segue.destination as! RepositoryVC
             destination.data = repoObject
         }
